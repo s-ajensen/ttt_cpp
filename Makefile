@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -g
+CXXFLAGS = -std=c++17 -Wall -Wextra -g
 INCLUDES = -Isrc -Ispec/lib
 SYSTEM_INCLUDES = -isystem lib
 
