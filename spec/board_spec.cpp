@@ -3,7 +3,12 @@
 #include "board.hpp"
 
 describe("Board", []{
-  it("blah", []{
-    should_eq(1, 1);
+
+  it("starts with no moves", [] {
+    // Board b;
+    // for (int i: b.cells) {
+    //   should_eq(0, i);
+    // }
   });
+
 });
