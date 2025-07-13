@@ -1,7 +1,8 @@
 # Compiler settings
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -g
-INCLUDES = -Isrc -Ispec/lib -Ilib
+INCLUDES = -Isrc -Ispec/lib
+SYSTEM_INCLUDES = -isystem lib
 
 SRC_DIR = src
 SPEC_DIR = spec
@@ -35,15 +36,15 @@ $(TEST_RUNNER): $(SPEC_MAIN) $(SPEC_OBJECTS) $(OBJECTS)
 
 $(BUILD_DIR)/test.o: $(SPEC_DIR)/test.cpp $(SPEC_DIR)/lib/catch.hpp
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SYSTEM_INCLUDES) -c $< -o $@
 
 $(BUILD_DIR)/%_spec.o: $(SPEC_DIR)/%_spec.cpp $(SPEC_DIR)/lib/bdd.hpp
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SYSTEM_INCLUDES) -c $< -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SYSTEM_INCLUDES) -c $< -o $@
 
 .PHONY: watch
 watch:
@@ -91,7 +92,7 @@ $(LIB_DIR)/immer: $(DEPS_LOG)
 
 .PHONY: check
 check:
-	@$(CXX) $(CXXFLAGS) $(INCLUDES) -fsyntax-only $(SPEC_DIR)/*_spec.cpp
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(SYSTEM_INCLUDES) -fsyntax-only $(SPEC_DIR)/*_spec.cpp
 
 .PHONY: help
 help:
