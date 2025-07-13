@@ -1,7 +1,7 @@
 # Compiler settings
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Werror -g
-INCLUDES = -Isrc -Ispec/lib -Ispec/lib/catch2
+INCLUDES = -Isrc -Ispec/lib
 
 SRC_DIR = src
 SPEC_DIR = spec
@@ -27,7 +27,7 @@ $(TEST_RUNNER): $(SPEC_MAIN) $(SPEC_OBJECTS) $(OBJECTS)
 	@mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BUILD_DIR)/main.o: $(SPEC_DIR)/main.cpp $(SPEC_DIR)/lib/catch2/catch.hpp
+$(BUILD_DIR)/main.o: $(SPEC_DIR)/main.cpp $(SPEC_DIR)/lib/catch.hpp
 	@mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
@@ -48,21 +48,16 @@ watch:
 		fswatch -1 -r src spec --exclude build || true; \
 	done
 
-.PHONY: watch-entr
-watch-entr:
-	@find src spec -name "*.cpp" -o -name "*.h" -o -name "*.hpp" | \
-		entr -c make test
-
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
 
 .PHONY: deps
-deps: $(SPEC_DIR)/lib/catch2/catch.hpp $(SPEC_DIR)/lib/bdd.hpp
+deps: $(SPEC_DIR)/lib/catch.hpp $(SPEC_DIR)/lib/bdd.hpp
 
-$(SPEC_DIR)/lib/catch2/catch.hpp:
+$(SPEC_DIR)/lib/catch.hpp:
 	@echo "Downloading Catch2..."
-	@mkdir -p $(SPEC_DIR)/lib/catch2
+	@mkdir -p $(SPEC_DIR)/lib
 	@curl -sL https://github.com/catchorg/Catch2/releases/download/v2.13.10/catch.hpp -o $@
 
 $(SPEC_DIR)/lib/bdd.hpp:
@@ -79,7 +74,6 @@ help:
 	@echo "Available targets:"
 	@echo "  make test       - Build and run tests (default)"
 	@echo "  make watch      - Auto-run tests on file changes (fswatch)"
-	@echo "  make watch-entr - Auto-run tests on file changes (entr)"
 	@echo "  make check      - Quick syntax check"
 	@echo "  make deps       - Download test dependencies"
 	@echo "  make clean      - Remove build artifacts"
